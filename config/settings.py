@@ -169,3 +169,51 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:5000']
 
 CORS_ALLOWED_METHODS = ['GET', 'POST', 'DELETE', 'PUT', 'PATCH']
+
+
+import logging
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "main_format": {
+        "format": "{levelname} -> {asctime} -> {module} -> {filename} -> {message}",
+        "style": "{",
+        },
+
+        "simple": {
+            "format": "{levelname} -> {message}",
+            "style": "{",
+        }
+    },
+    
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple"
+        },
+
+        "file": {
+            "class": "logging.FileHandler",
+            "formatter": "main_format",
+            "filename": "debug.log"
+        }
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "propagate": True
+        },
+
+        "django.request": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True
+        }
+    }
+}
+# logging.FileHandler

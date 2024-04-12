@@ -3,6 +3,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAdminUser, AllowAny
 from .serilaizers import ProductImageSerilaizer, ProductListSerilaizer, ProductSerilaizer, CategorySerilaizer
 from .models import Category, Product, ProductImage
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 class PermissionMixin:
@@ -22,6 +24,10 @@ class CategoryView(PermissionMixin, ModelViewSet):
 class ProductView(PermissionMixin, ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerilaizer
+
+    @method_decorator(cache_page(60*5))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_serializer_class(self):
         if self.action == 'list':
